@@ -42,6 +42,7 @@ object Dependencies {
     val akkaHttpCors = "ch.megard" %% "akka-http-cors" % "1.1.2" // Apache v2
 
     val scalapbCompilerPlugin = "com.thesamet.scalapb" %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion
+    val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1"
     val scalapbRuntime = ("com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion)
       .exclude("io.grpc", "grpc-netty")
 
@@ -67,9 +68,11 @@ object Dependencies {
   object Test {
     final val Test = sbt.Test
     val scalaTest = "org.scalatest" %% "scalatest" % Versions.scalaTest % "test" // Apache V2
+    val scalaMockito = "org.scalatestplus" %% "mockito-3-12" % "3.2.10.0" % "test"
     val scalaTestPlusJunit = "org.scalatestplus" %% "junit-4-12" % (Versions.scalaTest + ".0") % "test" // Apache V2
     val akkaDiscoveryConfig = "com.typesafe.akka" %% "akka-discovery" % Versions.akka % "test"
     val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % Versions.akka % "test"
+    val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp % "test"
     val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit" % Versions.akka % "test"
   }
 
@@ -79,6 +82,7 @@ object Dependencies {
 
   object Protobuf {
     val protobufJava = "com.google.protobuf" % "protobuf-java" % Versions.googleProtobuf
+    val googleApiCommonProtos = "com.google.api.grpc" % "proto-google-common-protos" % "2.7.4"
     val googleCommonProtos = "com.google.protobuf" % "protobuf-java" % Versions.googleProtobuf % "protobuf"
   }
 
@@ -90,16 +94,20 @@ object Dependencies {
 
   val codegen = l ++= Seq(
     Compile.scalapbCompilerPlugin,
+    Compile.scalaParser,
     // Temporarily added: this is a transitive
     // dependency, but we want to pull it up to
     // at least version 2.5.0
     Compile.collectionCompat,
     Protobuf.protobufJava, // or else scalapb pulls older version in transitively
-    Test.scalaTest)
+    Protobuf.googleApiCommonProtos, // or else scalapb pulls older version in transitively
+    Test.scalaTest,
+    Test.scalaMockito)
 
   val runtime = l ++= Seq(
     Compile.scalapbRuntime,
     Protobuf.protobufJava, // or else scalapb pulls older version in transitively
+    Protobuf.googleCommonProtos,
     Compile.grpcCore,
     Compile.grpcStub % "provided", // comes from the generators
     Compile.grpcNettyShaded,
@@ -114,6 +122,7 @@ object Dependencies {
     Compile.collectionCompat,
     Test.akkaDiscoveryConfig,
     Test.akkaTestkit,
+    Test.akkaHttpTestkit,
     Test.scalaTest,
     Test.scalaTestPlusJunit)
 
