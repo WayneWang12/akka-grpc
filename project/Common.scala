@@ -21,7 +21,8 @@ object Common extends AutoPlugin {
   override def globalSettings =
     Seq(
       commands += switchVersion,
-      organization := "com.lightbend.akka.grpc",
+//      organization := "com.lightbend.akka.grpc",
+      organization := "io.github.waynewang12",
       organizationName := "Lightbend Inc.",
       organizationHomepage := Some(url("https://www.lightbend.com/")),
       resolvers += Resolver.sonatypeRepo("staging"),

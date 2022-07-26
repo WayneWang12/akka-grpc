@@ -348,7 +348,7 @@ object HttpApi {
         case (selector, values) =>
           if (values.nonEmpty) {
             lookupFieldByPath(methDesc.getInputType, selector) match {
-              case null => requestError("Query parameter [$selector] refers to non-existant field")
+              case null => //ignore not founded ones
               case field if field.getJavaType == FieldDescriptor.JavaType.MESSAGE =>
                 requestError(
                   "Query parameter [$selector] refers to a message type"

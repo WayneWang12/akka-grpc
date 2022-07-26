@@ -125,7 +125,6 @@ object @{serviceName}Handler {
             }
             case m => scala.concurrent.Future.failed(new NotImplementedError(s"Not implemented: $m"))
           })
-          .recoverWith(GrpcExceptionHandler.from(eHandler(system.classicSystem))(system, writer))
       ).getOrElse(unsupportedMediaType)
 
 
